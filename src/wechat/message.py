@@ -1,5 +1,6 @@
 __author__ = 'zxy'
 
+from xml.etree.ElementTree import *
 
 class MsgType(object):
     TEXT = 'text'
@@ -21,21 +22,6 @@ class Msg(object):
     _createTime = ''
     _msgType = ''
 
-    def __init__(self):
-        pass
-
-    def __init__(self, to_user, from_user, create_time, msg_type, msg_id):
-        self._toUserName = to_user
-        self._fromUserName = from_user
-        self._createTime = create_time
-        self._msgType = msg_type
-
-    def __init__(self, xml_node):
-        self._toUserName = xml_node.find(MsgXmlElement.TO_USER_NAME).text
-        self._fromUserName = xml_node.find(MsgXmlElement.FROM_USER_NAME).text
-        self._createTime = xml_node.find(MsgXmlElement.CREATE_TIME).text
-        self._msgType = xml_node.find(MsgXmlElement.MSG_TYPE).text
-
     def __str__(self):
         return '\t'.join((self._toUserName, self._fromUserName, self._createTime, self._msgType))
 
@@ -45,11 +31,21 @@ class RequestMsg(Msg):
     _msgId = ''
 
     def __init__(self, xml_node):
-        super(RequestMsg, self).__init__(xml_node)
+        self._toUserName = xml_node.find(MsgXmlElement.TO_USER_NAME).text
+        self._fromUserName = xml_node.find(MsgXmlElement.FROM_USER_NAME).text
+        self._createTime = xml_node.find(MsgXmlElement.CREATE_TIME).text
+        self._msgType = xml_node.find(MsgXmlElement.MSG_TYPE).text
         self._msgId = xml_node.find(MsgXmlElement.MSG_ID).text
 
     def __str__(self):
         return '\t'.join((super(RequestMsg, self).__str__(), self._msgId))
+
+    def to_username(self):
+        return self._toUserName
+
+    def from_username(self):
+        return self._fromUserName
+
 
     @staticmethod
     def create(xml_node):
@@ -70,3 +66,41 @@ class TextRequestMsg(RequestMsg):
 
     def __str__(self):
         return '\t'.join((super(TextRequestMsg, self).__str__(), self._content))
+
+
+class ResponseMsg(Msg):
+
+    _template = '''
+    <xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[%s]]></MsgType>
+    %s
+    </xml>
+    '''
+
+    def __init__(self, to_user, from_user):
+        self._toUserName = to_user
+        self._fromUserName = from_user
+        self._createTime = ''
+
+    def xml(self):
+        return self._template % (self._toUserName, self._fromUserName, self._createTime, self._msgType, self.subXml)
+
+    def subxml(self):
+        pass
+
+
+class TextResponseMsg(ResponseMsg):
+
+    _content = ''
+    _sub_template = '<Content><![CDATA[%s]]></Content>'
+
+    def __init__(self, to_user, from_user, content):
+        super(ResponseMsg, self).__init__(to_user, from_user)
+        self._msgType = MsgType.TEXT
+        self._content = content
+
+    def subxml(self):
+        return self._sub_template % self._content
