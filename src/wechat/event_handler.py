@@ -1,6 +1,7 @@
 import web
 import hashlib
 from wechat.request import *
+from wechat.response import *
 from pocket.retrieve import Retrieve
 
 
@@ -13,7 +14,7 @@ class IndexEventHandler(object):
         post_data = web.data()
         resp = None
         if 'echostr' in parameter:
-            if self.__check_signature(parameter['signature'], parameter['timestamp'], parameter['nonce']):
+            if self.__check_signature(parameter.get('signature', 's'), parameter.get('timestamp', 't'), parameter.get('nonce', 'n')):
                 resp = parameter['echostr']
         return resp
 
@@ -22,9 +23,12 @@ class IndexEventHandler(object):
         post_data = web.data()
 
         req = RequestParser.parse(post_data)
+        resp = RetrieverResponse(req)
 
-        return "hello"
+        return resp.msg_str()
 
     def __check_signature(self, signature, timestamp, nonce):
-        s = ''.join([timestamp, nonce, self.__TOKEN].sort())
+        l = [timestamp, nonce, self.__TOKEN]
+        l.sort()
+        s = ''.join(l)
         return hashlib.sha1(s).hexdigest == signature

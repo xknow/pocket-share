@@ -30,6 +30,7 @@ class RetrieverResponse(Response):
     def msg_str(self):
         r = Retrieve()
         items = r.get_item_list()
-        content = '\n\n'.join(('\n'.join((i.resolved_title, i.excerpt, i.url)) for i in items))
-        return TextResponseMsg(self._requestMsg.from_username(), self._requestMsg.to_username, content)
+        print items
+        content = '\n\n'.join(('\n'.join((i.resolved_title(), i.excerpt(), i.given_url())) for i in items))
+        return TextResponseMsg(self._requestMsg.from_username(), self._requestMsg.to_username(), content).xml()
 

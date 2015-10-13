@@ -1,6 +1,7 @@
 __author__ = 'zxy'
 
 from xml.etree.ElementTree import *
+import time
 
 class MsgType(object):
     TEXT = 'text'
@@ -74,7 +75,7 @@ class ResponseMsg(Msg):
     <xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
     <FromUserName><![CDATA[%s]]></FromUserName>
-    <CreateTime>%s</CreateTime>
+    <CreateTime>%d</CreateTime>
     <MsgType><![CDATA[%s]]></MsgType>
     %s
     </xml>
@@ -83,10 +84,10 @@ class ResponseMsg(Msg):
     def __init__(self, to_user, from_user):
         self._toUserName = to_user
         self._fromUserName = from_user
-        self._createTime = ''
+        self._createTime = int(time.time())
 
     def xml(self):
-        return self._template % (self._toUserName, self._fromUserName, self._createTime, self._msgType, self.subXml)
+        return self._template % (self._toUserName, self._fromUserName, self._createTime, self._msgType, self.subxml())
 
     def subxml(self):
         pass
@@ -98,7 +99,7 @@ class TextResponseMsg(ResponseMsg):
     _sub_template = '<Content><![CDATA[%s]]></Content>'
 
     def __init__(self, to_user, from_user, content):
-        super(ResponseMsg, self).__init__(to_user, from_user)
+        super(TextResponseMsg, self).__init__(to_user, from_user)
         self._msgType = MsgType.TEXT
         self._content = content
 

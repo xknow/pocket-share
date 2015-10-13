@@ -3,6 +3,7 @@ __author__ = 'zxy'
 from wechat.message import RequestMsg
 from xml.etree import ElementTree
 
+
 class RequestParser(object):
 
     @staticmethod
