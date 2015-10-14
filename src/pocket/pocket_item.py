@@ -28,7 +28,7 @@ class PocketItem(object):
     __resolved_title = ''
 
     def __init__(self, json_dict):
-        print type(json_dict)
+        # print type(json_dict)
         self.__item_id = json_dict['item_id']
         self.__given_url = json_dict['given_url']
         self.__excerpt = json_dict['excerpt']
@@ -47,6 +47,6 @@ class PocketItem(object):
         return self.__resolved_title
 
     def __str__(self):
-        print type(self.excerpt())
+        # print type(self.excerpt())
         return self.__item_id + '\t' + self.given_url() + '\t' + self.excerpt()
 

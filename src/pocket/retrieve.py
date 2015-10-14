@@ -25,6 +25,6 @@ class Retrieve(object):
         resp, content = http_conn.request(uri=uri, method=method, headers=headers, body=body)
         # print 'Request over.'
         if resp.status != 200:
-            print resp
+            # print resp
             return None
         return self.parse_json(content)
