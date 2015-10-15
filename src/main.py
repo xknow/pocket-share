@@ -1,7 +1,7 @@
 import web
 from wechat.event_handler import IndexEventHandler
+from wechat.period_retrieve_task import PeriodRetrieveTask
 import sys
-
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -12,7 +12,11 @@ urls = (
 app = web.application(urls, globals())
 
 if __name__ == "__main__":
+    task = PeriodRetrieveTask()
+    task.start()
     app.run()
+    task.stop()
+    print 'over'
 else:
     import os
     import sae

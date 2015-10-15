@@ -59,14 +59,14 @@ class RequestMsg(Msg):
 
 class TextRequestMsg(RequestMsg):
 
-    _content = ''
+    content = ''
 
     def __init__(self, xml_node):
         super(TextRequestMsg, self).__init__(xml_node)
-        self._content = xml_node.find(MsgXmlElement.CONTENT).text
+        self.content = xml_node.find(MsgXmlElement.CONTENT).text
 
     def __str__(self):
-        return '\t'.join((super(TextRequestMsg, self).__str__(), self._content))
+        return '\t'.join((super(TextRequestMsg, self).__str__(), self.content))
 
 
 class ResponseMsg(Msg):

@@ -26,6 +26,7 @@ class PocketItem(object):
     __given_url = ''
     __excerpt = ''
     __resolved_title = ''
+    __time_added = 0
 
     def __init__(self, json_dict):
         # print type(json_dict)
@@ -33,6 +34,7 @@ class PocketItem(object):
         self.__given_url = json_dict['given_url']
         self.__excerpt = json_dict['excerpt']
         self.__resolved_title = json_dict['resolved_title']
+        self.__time_added = int(json_dict['time_added'])
 
     def item_id(self):
         return self.__item_id
@@ -45,6 +47,9 @@ class PocketItem(object):
 
     def resolved_title(self):
         return self.__resolved_title
+
+    def time_added(self):
+        return self.__time_added
 
     def __str__(self):
         # print type(self.excerpt())
